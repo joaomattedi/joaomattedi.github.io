@@ -1,0 +1,27 @@
+.nav-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  z-index: 1;
+  justify-content: center;
+}
+
+.NavBar {
+  align-items: center;
+  background-color: grey;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  height: 65px;
+  justify-content: space-evenly;
+  width: 23%;
+}
+
+.icons {
+  transition: ease-in-out 0.3s;
+}
+
+.icons:hover {
+  transform:  scale(1.3);
+}
