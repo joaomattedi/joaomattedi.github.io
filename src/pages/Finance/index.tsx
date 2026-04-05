@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 import { useFinance } from './hooks/useFinance';
 import Dashboard from './components/Dashboard';
 import TransactionForm from './components/TransactionForm';
@@ -55,6 +56,7 @@ export default function Finance() {
   const [sortDir, setSortDir] = useState<SortDir>('desc');
   const [seeding, setSeeding] = useState(false);
 
+  const { logOut } = useAuth();
   const { loading, addTransaction, updateTransaction, deleteTransaction, getByMonth, getTotals, seedFixedExpenses } = useFinance();
 
   const monthTransactions = getByMonth(year, month);
@@ -83,7 +85,10 @@ export default function Finance() {
 
   return (
     <PageWrapper>
-      <PageTitle>Finanças</PageTitle>
+      <ColumnHeader style={{ marginBottom: '2rem' }}>
+        <PageTitle style={{ margin: 0 }}>Finanças</PageTitle>
+        <SeedButton type="button" onClick={logOut}>Sair</SeedButton>
+      </ColumnHeader>
 
       <Section>
         <MonthRow>
