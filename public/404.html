@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // GitHub Pages SPA redirect trick
+      // Encodes the path into the query string so index.html can read it
+      var path = window.location.pathname;
+      window.location.replace(
+        window.location.origin + '/?p=' + encodeURIComponent(path)
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
