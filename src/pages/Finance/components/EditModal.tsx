@@ -14,7 +14,7 @@ import {
   TypeToggle,
   TypeButton,
 } from './styles';
-import { Transaction, TransactionType, EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../types';
+import { Transaction, TransactionType, EXPENSE_CATEGORIES, INCOME_CATEGORIES, ACCOUNTS } from '../types';
 
 interface EditModalProps {
   transaction: Transaction;
@@ -27,6 +27,7 @@ export default function EditModal({ transaction, onSave, onClose }: EditModalPro
   const [amount, setAmount] = useState(String(transaction.amount));
   const [description, setDescription] = useState(transaction.description);
   const [category, setCategory] = useState(transaction.category);
+  const [account, setAccount] = useState(transaction.account ?? '');
   const [date, setDate] = useState(transaction.date);
   const [isFixed, setIsFixed] = useState(transaction.isFixed ?? false);
 
@@ -47,6 +48,7 @@ export default function EditModal({ transaction, onSave, onClose }: EditModalPro
       description: description.trim(),
       category,
       date,
+      ...(account && { account }),
       ...(type === 'expense' && { isFixed }),
     });
     onClose();
@@ -90,6 +92,13 @@ export default function EditModal({ transaction, onSave, onClose }: EditModalPro
           <option value="">Categoria</option>
           {categories.map((c) => (
             <option key={c} value={c}>{c}</option>
+          ))}
+        </Select>
+
+        <Select value={account} onChange={(e) => setAccount(e.target.value)}>
+          <option value="">Conta / Cartão</option>
+          {ACCOUNTS.map((a) => (
+            <option key={a} value={a}>{a}</option>
           ))}
         </Select>
 

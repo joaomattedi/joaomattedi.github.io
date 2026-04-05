@@ -50,6 +50,7 @@ export default function TransactionList({ type, transactions, onEdit, onDelete }
             <Tr>
               <Th>Descrição</Th>
               <Th>Categoria</Th>
+              {type === 'expense' && <Th>Conta</Th>}
               <Th>Data</Th>
               <ThRight>Valor</ThRight>
               <Th></Th>
@@ -63,6 +64,7 @@ export default function TransactionList({ type, transactions, onEdit, onDelete }
                   {t.isFixed && <> <FixedBadge>fixa</FixedBadge></>}
                 </Td>
                 <TdMuted>{t.category}</TdMuted>
+                {type === 'expense' && <TdMuted>{t.account ?? '—'}</TdMuted>}
                 <TdMuted>{fmtDate(t.date)}</TdMuted>
                 <TdRight>
                   <Amount type={type}>{fmt(t.amount)}</Amount>

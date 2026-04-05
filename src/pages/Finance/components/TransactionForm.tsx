@@ -8,7 +8,7 @@ import {
   SubmitButton,
   CheckboxRow,
 } from './styles';
-import { Transaction, TransactionType, EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../types';
+import { Transaction, TransactionType, EXPENSE_CATEGORIES, INCOME_CATEGORIES, ACCOUNTS } from '../types';
 
 interface TransactionFormProps {
   onAdd: (transaction: Omit<Transaction, 'id'>) => void;
@@ -21,6 +21,7 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
+  const [account, setAccount] = useState('');
   const [date, setDate] = useState(today());
   const [isFixed, setIsFixed] = useState(false);
 
@@ -37,6 +38,7 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
       description: description.trim(),
       category,
       date,
+      ...(account && { account }),
       ...(type === 'expense' && { isFixed }),
     });
     setAmount('');
@@ -89,6 +91,13 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
         <option value="">Categoria</option>
         {categories.map((c) => (
           <option key={c} value={c}>{c}</option>
+        ))}
+      </Select>
+
+      <Select value={account} onChange={(e) => setAccount(e.target.value)}>
+        <option value="">Conta / Cartão</option>
+        {ACCOUNTS.map((a) => (
+          <option key={a} value={a}>{a}</option>
         ))}
       </Select>
 

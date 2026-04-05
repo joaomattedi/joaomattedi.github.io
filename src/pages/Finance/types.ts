@@ -9,7 +9,10 @@ export interface Transaction {
   date: string; // ISO date string YYYY-MM-DD
   isFixed?: boolean; // only for expenses
   createdAt?: number; // ms timestamp for insertion-order sorting
+  account?: string;
 }
+
+export const ACCOUNTS = ['Itaú', 'Nubank'] as const;
 
 export const EXPENSE_CATEGORIES = [
   'Mercado',
