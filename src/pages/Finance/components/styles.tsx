@@ -41,6 +41,35 @@ export const TwoColumns = styled.div`
 
 export const Column = styled.div``;
 
+export const ColumnHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+`;
+
+export const SeedButton = styled.button`
+  background: none;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  white-space: nowrap;
+  transition: all 0.1s;
+
+  &:hover {
+    background: #f5f5f5;
+    border-color: #bbb;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+`;
+
 export const SortRow = styled.div`
   display: flex;
   align-items: center;

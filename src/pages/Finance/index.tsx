@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { useFinance } from './hooks/useFinance';
 import Dashboard from './components/Dashboard';
 import TransactionForm from './components/TransactionForm';
@@ -11,6 +11,8 @@ import {
   SectionTitle,
   TwoColumns,
   Column,
+  ColumnHeader,
+  SeedButton,
   MonthRow,
   MonthButton,
   MonthLabel,
@@ -37,7 +39,6 @@ function sortTransactions(list: Transaction[], field: SortField, dir: SortDir) {
       aVal = new Date(a.date + 'T00:00:00').getTime();
       bVal = new Date(b.date + 'T00:00:00').getTime();
     } else {
-      // fall back to date for entries without createdAt
       aVal = a.createdAt ?? new Date(a.date + 'T00:00:00').getTime();
       bVal = b.createdAt ?? new Date(b.date + 'T00:00:00').getTime();
     }
@@ -52,6 +53,7 @@ export default function Finance() {
   const [editing, setEditing] = useState<Transaction | null>(null);
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [seeding, setSeeding] = useState(false);
 
   const { loading, addTransaction, updateTransaction, deleteTransaction, getByMonth, getTotals, seedFixedExpenses } = useFinance();
 
@@ -61,16 +63,6 @@ export default function Finance() {
   const expenseTransactions = sorted.filter((t) => t.type === 'expense');
   const { income, expense, balance } = getTotals(monthTransactions);
 
-  const isFirstLoad = useRef(true);
-  useEffect(() => {
-    if (loading) return;
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false;
-      return;
-    }
-    seedFixedExpenses(year, month);
-  }, [year, month, loading]);
-
   function prevMonth() {
     if (month === 1) { setMonth(12); setYear((y) => y - 1); }
     else setMonth((m) => m - 1);
@@ -79,6 +71,12 @@ export default function Finance() {
   function nextMonth() {
     if (month === 12) { setMonth(1); setYear((y) => y + 1); }
     else setMonth((m) => m + 1);
+  }
+
+  async function handleSeedFixed() {
+    setSeeding(true);
+    await seedFixedExpenses(year, month);
+    setSeeding(false);
   }
 
   if (loading) return <PageWrapper><PageTitle>Carregando...</PageTitle></PageWrapper>;
@@ -127,7 +125,12 @@ export default function Finance() {
           />
         </Column>
         <Column>
-          <SectionTitle>Despesas</SectionTitle>
+          <ColumnHeader>
+            <SectionTitle style={{ margin: 0 }}>Despesas</SectionTitle>
+            <SeedButton type="button" onClick={handleSeedFixed} disabled={seeding}>
+              {seeding ? 'Adicionando...' : '+ Despesas fixas'}
+            </SeedButton>
+          </ColumnHeader>
           <TransactionList
             type="expense"
             transactions={expenseTransactions}

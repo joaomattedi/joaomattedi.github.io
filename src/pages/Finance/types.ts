@@ -12,6 +12,7 @@ export interface Transaction {
 }
 
 export const EXPENSE_CATEGORIES = [
+  'Mercado',
   'Alimentação',
   'Transporte',
   'Moradia',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   FormCard,
   TypeToggle,
@@ -24,6 +24,7 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
   const [date, setDate] = useState(today());
   const [isFixed, setIsFixed] = useState(false);
 
+  const descriptionRef = useRef<HTMLInputElement>(null);
   const categories = type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES;
 
   function handleSubmit(e: React.FormEvent) {
@@ -43,6 +44,7 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
     setCategory('');
     setDate(today());
     setIsFixed(false);
+    descriptionRef.current?.focus();
   }
 
   function handleTypeChange(newType: TransactionType) {
@@ -63,8 +65,10 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
       </TypeToggle>
 
       <Input
+        ref={descriptionRef}
         type="text"
         placeholder="Descrição"
+        autoCapitalize="true"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         maxLength={60}
