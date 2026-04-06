@@ -294,12 +294,157 @@ export const SubmitButton = styled.button`
   }
 `;
 
-/* ─── Transaction Table ───────────────────────────────────────── */
+/* ─── Spending Insights ───────────────────────────────────────── */
 
-export const TableWrapper = styled.div`
+export const InsightsCard = styled.div`
   background: #fff;
   border: 1px solid #e5e5e5;
   border-radius: 8px;
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+`;
+
+export const InsightsGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const InsightsSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+export const InsightsSectionTitle = styled.p`
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+`;
+
+export const CategoryRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+export const CategoryName = styled.span`
+  font-size: 0.78rem;
+  color: #555;
+  width: 90px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const BarTrack = styled.div`
+  flex: 1;
+  background: #f0f0f0;
+  border-radius: 99px;
+  height: 6px;
+  overflow: hidden;
+`;
+
+interface BarFillProps {
+  pct: number;
+}
+
+export const BarFill = styled.div<BarFillProps>`
+  background: #dc2626;
+  border-radius: 99px;
+  height: 100%;
+  width: ${({ pct }) => pct}%;
+  transition: width 0.3s;
+`;
+
+export const CategoryPct = styled.span`
+  font-size: 0.75rem;
+  color: #888;
+  width: 32px;
+  text-align: right;
+  flex-shrink: 0;
+`;
+
+export const BigExpenseCard = styled.div`
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+`;
+
+export const BigExpenseLabel = styled.p`
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+`;
+
+export const BigExpenseDesc = styled.p`
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #111;
+  margin-bottom: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+export const BigExpenseMeta = styled.p`
+  font-size: 0.78rem;
+  color: #dc2626;
+`;
+
+/* ─── Accordion ───────────────────────────────────────────────── */
+
+export const AccordionHeader = styled.button<{ open: boolean }>`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  border-radius: ${({ open }) => (open ? '6px 6px 0 0' : '6px')};
+  cursor: pointer;
+  padding: 0.55rem 0.75rem;
+  margin-bottom: 0;
+  transition: background 0.15s;
+
+  &:hover {
+    background: #efefef;
+  }
+
+  span:first-child {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  span:last-child {
+    font-size: 0.7rem;
+    color: #888;
+    transform: rotate(${({ open }) => (open ? '0deg' : '-90deg')});
+    transition: transform 0.2s;
+    display: inline-block;
+    line-height: 1;
+  }
+`;
+
+/* ─── Transaction Table ───────────────────────────────────────── */
+
+export const TableWrapper = styled.div<{ attached?: boolean }>`
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-top: ${({ attached }) => (attached ? 'none' : '1px solid #e5e5e5')};
+  border-radius: ${({ attached }) => (attached ? '0 0 6px 6px' : '8px')};
   overflow: hidden;
 `;
 

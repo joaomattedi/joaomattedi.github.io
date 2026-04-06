@@ -26,6 +26,7 @@ interface TransactionListProps {
   transactions: Transaction[];
   onEdit: (transaction: Transaction) => void;
   onDelete: (id: string) => void;
+  attached?: boolean;
 }
 
 function fmt(value: number) {
@@ -37,11 +38,11 @@ function fmtDate(dateStr: string) {
   return `${day}/${month}/${year}`;
 }
 
-export default function TransactionList({ type, transactions, onEdit, onDelete }: TransactionListProps) {
+export default function TransactionList({ type, transactions, onEdit, onDelete, attached }: TransactionListProps) {
   const total = transactions.reduce((acc, t) => acc + t.amount, 0);
 
   return (
-    <TableWrapper>
+    <TableWrapper attached={attached}>
       {transactions.length === 0 ? (
         <EmptyState>Nenhuma {type === 'income' ? 'receita' : 'despesa'} neste mês.</EmptyState>
       ) : (
