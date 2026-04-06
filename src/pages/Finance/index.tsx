@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useFinance } from './hooks/useFinance';
 import Dashboard from './components/Dashboard';
+import SpendingInsights from './components/SpendingInsights';
 import TransactionForm from './components/TransactionForm';
 import TransactionList from './components/TransactionList';
 import EditModal from './components/EditModal';
@@ -21,6 +22,7 @@ import {
   SortLabel,
   SortSelect,
   SortDirButton,
+  AccordionHeader,
 } from './components/styles';
 import { Transaction } from './types';
 
@@ -29,7 +31,7 @@ const MONTHS = [
   'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro',
 ];
 
-type SortField = 'date' | 'createdAt';
+type SortField = 'date' | 'createdAt' | 'amount';
 type SortDir = 'asc' | 'desc';
 
 function sortTransactions(list: Transaction[], field: SortField, dir: SortDir) {
@@ -39,6 +41,9 @@ function sortTransactions(list: Transaction[], field: SortField, dir: SortDir) {
     if (field === 'date') {
       aVal = new Date(a.date + 'T00:00:00').getTime();
       bVal = new Date(b.date + 'T00:00:00').getTime();
+    } else if (field === 'amount') {
+      aVal = a.amount;
+      bVal = b.amount;
     } else {
       aVal = a.createdAt ?? new Date(a.date + 'T00:00:00').getTime();
       bVal = b.createdAt ?? new Date(b.date + 'T00:00:00').getTime();
@@ -55,14 +60,20 @@ export default function Finance() {
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
   const [seeding, setSeeding] = useState(false);
+  const [fixedOpen, setFixedOpen] = useState(true);
+  const [variableOpen, setVariableOpen] = useState(true);
 
   const { logOut } = useAuth();
   const { loading, addTransaction, updateTransaction, deleteTransaction, getByMonth, getTotals, seedFixedExpenses } = useFinance();
 
   const monthTransactions = getByMonth(year, month);
   const sorted = sortTransactions(monthTransactions, sortField, sortDir);
+
   const incomeTransactions = sorted.filter((t) => t.type === 'income');
-  const expenseTransactions = sorted.filter((t) => t.type === 'expense');
+  const allExpenses = sorted.filter((t) => t.type === 'expense');
+  const fixedExpenses = allExpenses.filter((t) => t.isFixed);
+  const variableExpenses = allExpenses.filter((t) => !t.isFixed);
+
   const { income, expense, balance } = getTotals(monthTransactions);
 
   function prevMonth() {
@@ -99,6 +110,13 @@ export default function Finance() {
         <Dashboard income={income} expense={expense} balance={balance} />
       </Section>
 
+      {allExpenses.length > 0 && (
+        <Section>
+          <SectionTitle>Análise de gastos</SectionTitle>
+          <SpendingInsights expenses={allExpenses} income={income} />
+        </Section>
+      )}
+
       <Section>
         <SectionTitle>Nova transação</SectionTitle>
         <TransactionForm onAdd={addTransaction} />
@@ -109,6 +127,7 @@ export default function Finance() {
         <SortSelect value={sortField} onChange={(e) => setSortField(e.target.value as SortField)}>
           <option value="date">Data da transação</option>
           <option value="createdAt">Horário de cadastro</option>
+          <option value="amount">Valor</option>
         </SortSelect>
         <SortDirButton
           type="button"
@@ -136,12 +155,42 @@ export default function Finance() {
               {seeding ? 'Adicionando...' : '+ Despesas fixas'}
             </SeedButton>
           </ColumnHeader>
-          <TransactionList
-            type="expense"
-            transactions={expenseTransactions}
-            onEdit={setEditing}
-            onDelete={deleteTransaction}
-          />
+
+          {fixedExpenses.length > 0 && (
+            <div style={{ marginBottom: '1rem' }}>
+              <AccordionHeader open={fixedOpen} onClick={() => setFixedOpen((o) => !o)}>
+                <span>Fixas ({fixedExpenses.length})</span>
+                <span>▾</span>
+              </AccordionHeader>
+              {fixedOpen && (
+                <TransactionList
+                  type="expense"
+                  transactions={fixedExpenses}
+                  onEdit={setEditing}
+                  onDelete={deleteTransaction}
+                  attached
+                />
+              )}
+            </div>
+          )}
+
+          <AccordionHeader
+            open={variableOpen}
+            onClick={() => setVariableOpen((o) => !o)}
+            style={{ marginTop: fixedExpenses.length > 0 ? '0.25rem' : 0 }}
+          >
+            <span>Variáveis ({variableExpenses.length})</span>
+            <span>▾</span>
+          </AccordionHeader>
+          {variableOpen && (
+            <TransactionList
+              type="expense"
+              transactions={variableExpenses}
+              onEdit={setEditing}
+              onDelete={deleteTransaction}
+              attached
+            />
+          )}
         </Column>
       </TwoColumns>
 
