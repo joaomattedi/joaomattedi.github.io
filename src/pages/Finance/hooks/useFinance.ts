@@ -36,6 +36,10 @@ export function useFinance() {
     await deleteDoc(doc(db, COLLECTION, id));
   }, []);
 
+  const togglePaid = useCallback(async (id: string, isPaid: boolean) => {
+    await updateDoc(doc(db, COLLECTION, id), { isPaid });
+  }, []);
+
   const updateTransaction = useCallback(async (id: string, data: Omit<Transaction, 'id'>) => {
     await updateDoc(doc(db, COLLECTION, id), { ...data });
   }, []);
@@ -98,5 +102,5 @@ export function useFinance() {
     [transactions],
   );
 
-  return { transactions, loading, addTransaction, updateTransaction, deleteTransaction, getByMonth, getTotals, seedFixedExpenses };
+  return { transactions, loading, addTransaction, updateTransaction, deleteTransaction, togglePaid, getByMonth, getTotals, seedFixedExpenses };
 }

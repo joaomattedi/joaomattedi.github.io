@@ -64,7 +64,7 @@ export default function Finance() {
   const [variableOpen, setVariableOpen] = useState(true);
 
   const { logOut } = useAuth();
-  const { loading, addTransaction, updateTransaction, deleteTransaction, getByMonth, getTotals, seedFixedExpenses } = useFinance();
+  const { loading, addTransaction, updateTransaction, deleteTransaction, togglePaid, getByMonth, getTotals, seedFixedExpenses } = useFinance();
 
   const monthTransactions = getByMonth(year, month);
   const sorted = sortTransactions(monthTransactions, sortField, sortDir);
@@ -75,6 +75,9 @@ export default function Finance() {
   const variableExpenses = allExpenses.filter((t) => !t.isFixed);
 
   const { income, expense, balance } = getTotals(monthTransactions);
+  const paidExpense = monthTransactions
+    .filter((t) => t.type === 'expense' && t.isPaid)
+    .reduce((acc, t) => acc + t.amount, 0);
 
   function prevMonth() {
     if (month === 1) { setMonth(12); setYear((y) => y - 1); }
@@ -113,7 +116,7 @@ export default function Finance() {
       {allExpenses.length > 0 && (
         <Section>
           <SectionTitle>Análise de gastos</SectionTitle>
-          <SpendingInsights expenses={allExpenses} income={income} />
+          <SpendingInsights expenses={allExpenses} income={income} paidExpense={paidExpense} />
         </Section>
       )}
 
@@ -168,6 +171,7 @@ export default function Finance() {
                   transactions={fixedExpenses}
                   onEdit={setEditing}
                   onDelete={deleteTransaction}
+                  onTogglePaid={togglePaid}
                   attached
                 />
               )}
@@ -188,6 +192,7 @@ export default function Finance() {
               transactions={variableExpenses}
               onEdit={setEditing}
               onDelete={deleteTransaction}
+              onTogglePaid={togglePaid}
               attached
             />
           )}

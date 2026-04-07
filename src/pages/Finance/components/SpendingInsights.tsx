@@ -19,16 +19,18 @@ import {
 interface SpendingInsightsProps {
   expenses: Transaction[];
   income: number;
+  paidExpense: number;
 }
 
 function fmt(value: number) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
 
-export default function SpendingInsights({ expenses, income }: SpendingInsightsProps) {
+export default function SpendingInsights({ expenses, income, paidExpense }: SpendingInsightsProps) {
   if (expenses.length === 0) return null;
 
   const totalExpense = expenses.reduce((acc, t) => acc + t.amount, 0);
+  const paidPercent = totalExpense > 0 ? Math.round((paidExpense / totalExpense) * 100) : 0;
 
   // Group by category
   const byCategory = expenses.reduce<Record<string, number>>((acc, t) => {
@@ -71,6 +73,15 @@ export default function SpendingInsights({ expenses, income }: SpendingInsightsP
             <BigExpenseMeta>
               {fmt(biggest.amount)}
               {income > 0 && ` · ${biggestPctIncome.toFixed(1)}% da receita`}
+            </BigExpenseMeta>
+          </BigExpenseCard>
+
+          <InsightsSectionTitle style={{ marginTop: '1rem' }}>Contas pagas</InsightsSectionTitle>
+          <BigExpenseCard>
+            <BigExpenseLabel>{fmt(paidExpense)} de {fmt(totalExpense)}</BigExpenseLabel>
+            <BigExpenseDesc>{paidPercent}%</BigExpenseDesc>
+            <BigExpenseMeta style={{ color: '#16a34a' }}>
+              {totalExpense - paidExpense > 0 ? `${fmt(totalExpense - paidExpense)} restantes` : 'Tudo pago!'}
             </BigExpenseMeta>
           </BigExpenseCard>
         </InsightsSection>

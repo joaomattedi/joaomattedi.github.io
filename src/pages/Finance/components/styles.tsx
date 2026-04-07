@@ -149,6 +149,12 @@ export const CardValue = styled.p<CardValueProps>`
   color: ${({ variant }) => (variant ? valueColors[variant] : '#111')};
 `;
 
+export const CardSubLabel = styled.p`
+  font-size: 0.7rem;
+  color: #aaa;
+  margin-top: 0.25rem;
+`;
+
 /* ─── Month Selector ──────────────────────────────────────────── */
 
 export const MonthRow = styled.div`
@@ -635,6 +641,13 @@ export const SaveButton = styled.button`
   &:hover {
     opacity: 0.8;
   }
+`;
+
+export const PaidCheckbox = styled.input`
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
+  accent-color: #16a34a;
 `;
 
 export const EmptyState = styled.p`
