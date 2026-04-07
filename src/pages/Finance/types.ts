@@ -13,7 +13,7 @@ export interface Transaction {
   account?: string;
 }
 
-export const ACCOUNTS = ['Itaú', 'Nubank'] as const;
+export const ACCOUNTS = ['PIX', 'Crédito Itaú', 'Crédito Nubank', 'Débito Nubank'] as const;
 
 export const EXPENSE_CATEGORIES = [
   'Mercado',
