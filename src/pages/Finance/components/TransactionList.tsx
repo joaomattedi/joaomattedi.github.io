@@ -18,6 +18,7 @@ import {
   TableTotal,
   TotalLabel,
   TotalValue,
+  PaidCheckbox,
 } from './styles';
 import { Transaction, TransactionType } from '../types';
 
@@ -27,6 +28,7 @@ interface TransactionListProps {
   onEdit: (transaction: Transaction) => void;
   onDelete: (id: string) => void;
   attached?: boolean;
+  onTogglePaid?: (id: string, isPaid: boolean) => void;
 }
 
 function fmt(value: number) {
@@ -38,7 +40,7 @@ function fmtDate(dateStr: string) {
   return `${day}/${month}/${year}`;
 }
 
-export default function TransactionList({ type, transactions, onEdit, onDelete, attached }: TransactionListProps) {
+export default function TransactionList({ type, transactions, onEdit, onDelete, attached, onTogglePaid }: TransactionListProps) {
   const total = transactions.reduce((acc, t) => acc + t.amount, 0);
 
   return (
@@ -54,6 +56,7 @@ export default function TransactionList({ type, transactions, onEdit, onDelete, 
               {type === 'expense' && <Th>Conta</Th>}
               <Th>Data</Th>
               <ThRight>Valor</ThRight>
+              {type === 'expense' && <Th style={{ textAlign: 'center' }}>Pago</Th>}
               <Th></Th>
             </Tr>
           </Thead>
@@ -70,6 +73,16 @@ export default function TransactionList({ type, transactions, onEdit, onDelete, 
                 <TdRight>
                   <Amount type={type}>{fmt(t.amount)}</Amount>
                 </TdRight>
+                {type === 'expense' && (
+                  <Td style={{ textAlign: 'center' }}>
+                    <PaidCheckbox
+                      type="checkbox"
+                      checked={t.isPaid ?? false}
+                      onChange={(e) => onTogglePaid?.(t.id, e.target.checked)}
+                      title={t.isPaid ? 'Marcar como não pago' : 'Marcar como pago'}
+                    />
+                  </Td>
+                )}
                 <Td style={{ whiteSpace: 'nowrap' }}>
                   <EditButton onClick={() => onEdit(t)} title="Editar">✎</EditButton>
                   <DeleteButton onClick={() => onDelete(t.id)} title="Excluir">×</DeleteButton>

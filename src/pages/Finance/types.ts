@@ -8,6 +8,7 @@ export interface Transaction {
   category: string;
   date: string; // ISO date string YYYY-MM-DD
   isFixed?: boolean; // only for expenses
+  isPaid?: boolean; // only for expenses
   createdAt?: number; // ms timestamp for insertion-order sorting
   account?: string;
 }
