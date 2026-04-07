@@ -11,6 +11,7 @@ import {
   Input,
   Select,
   CheckboxRow,
+  Checkbox,
   TypeToggle,
   TypeButton,
 } from './styles';
@@ -110,8 +111,7 @@ export default function EditModal({ transaction, onSave, onClose }: EditModalPro
 
         {type === 'expense' && (
           <CheckboxRow>
-            <input
-              type="checkbox"
+            <Checkbox
               id="editIsFixed"
               checked={isFixed}
               onChange={(e) => setIsFixed(e.target.checked)}

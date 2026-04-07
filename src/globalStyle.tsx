@@ -19,7 +19,8 @@ export default createGlobalStyle`
     font-family: inherit;
   }
 
-  input, select {
+  input, select, textarea {
     font-family: inherit;
+    font-size: inherit;
   }
 `;
