@@ -4,9 +4,11 @@ import {
   TypeToggle,
   TypeButton,
   Input,
+  WideInput,
   Select,
   SubmitButton,
   CheckboxRow,
+  Checkbox,
 } from './styles';
 import { Transaction, TransactionType, EXPENSE_CATEGORIES, INCOME_CATEGORIES, ACCOUNTS } from '../types';
 
@@ -66,11 +68,11 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
         </TypeButton>
       </TypeToggle>
 
-      <Input
+      <WideInput
         ref={descriptionRef}
         type="text"
         placeholder="Descrição"
-        autoCapitalize="true"
+        autoCapitalize="on"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         maxLength={60}
@@ -110,8 +112,7 @@ export default function TransactionForm({ onAdd }: TransactionFormProps) {
 
       {type === 'expense' && (
         <CheckboxRow>
-          <input
-            type="checkbox"
+          <Checkbox
             id="isFixed"
             checked={isFixed}
             onChange={(e) => setIsFixed(e.target.checked)}

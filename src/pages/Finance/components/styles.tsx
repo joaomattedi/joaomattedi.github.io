@@ -82,15 +82,19 @@ export const SortLabel = styled.span`
   color: #888;
 `;
 
+const chevronArrow = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`;
+
 export const SortSelect = styled.select`
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   color: #111;
   font-size: 0.8rem;
-  padding: 0.3rem 0.5rem;
-  background: #fff;
+  padding: 0.3rem 2rem 0.3rem 0.5rem;
+  background: #fff ${chevronArrow} no-repeat right 0.5rem center;
   cursor: pointer;
   outline: none;
+  appearance: none;
+  -webkit-appearance: none;
 
   &:focus {
     border-color: #2563eb;
@@ -124,17 +128,24 @@ export const CardsRow = styled.div`
   }
 `;
 
-export const SummaryCard = styled.div`
+interface SummaryCardProps {
+  variant?: 'income' | 'expense' | 'balance';
+}
+
+const cardAccentColors = { income: '#16a34a', expense: '#dc2626', balance: '#9ca3af' };
+
+export const SummaryCard = styled.div<SummaryCardProps>`
   background: #fff;
-  border: 1px solid #e5e5e5;
   border-radius: 8px;
-  padding: 1rem;
+  border-left: 3px solid ${({ variant }) => (variant ? cardAccentColors[variant] : '#e5e5e5')};
+  padding: 1rem 1rem 1rem 0.875rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 `;
 
 export const CardLabel = styled.p`
   font-size: 0.75rem;
   color: #888;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 `;
 
 interface CardValueProps {
@@ -144,14 +155,15 @@ interface CardValueProps {
 const valueColors = { income: '#16a34a', expense: '#dc2626', balance: '#111' };
 
 export const CardValue = styled.p<CardValueProps>`
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: ${({ variant }) => (variant ? valueColors[variant] : '#111')};
+  line-height: 1.2;
 `;
 
 export const CardSubLabel = styled.p`
   font-size: 0.7rem;
-  color: #aaa;
+  color: #9ca3af;
   margin-top: 0.25rem;
 `;
 
@@ -194,7 +206,7 @@ export const FormCard = styled.form`
   border-radius: 8px;
   padding: 1.25rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
   align-items: end;
 
@@ -240,10 +252,39 @@ export const Input = styled.input`
   width: 100%;
   outline: none;
   background: #fff;
+  appearance: none;
+  -webkit-appearance: none;
 
   &:focus {
     border-color: #2563eb;
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+  }
+
+  /* Hide number spinners */
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Normalize date input */
+  &[type='date'] {
+    cursor: text;
+  }
+  &[type='date']::-webkit-calendar-picker-indicator {
+    opacity: 0.4;
+    cursor: pointer;
+  }
+`;
+
+export const WideInput = styled(Input)`
+  grid-column: span 2;
+
+  @media (max-width: 640px) {
+    grid-column: span 1;
   }
 `;
 
@@ -252,11 +293,13 @@ export const Select = styled.select`
   border-radius: 4px;
   color: #111;
   font-size: 0.9rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 2.25rem 0.5rem 0.75rem;
   width: 100%;
   outline: none;
-  background: #fff;
+  background: #fff ${chevronArrow} no-repeat right 0.75rem center;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
 
   &:focus {
     border-color: #2563eb;
@@ -274,12 +317,7 @@ export const CheckboxRow = styled.div`
     font-size: 0.85rem;
     color: #555;
     cursor: pointer;
-  }
-
-  input[type='checkbox'] {
-    cursor: pointer;
-    width: 15px;
-    height: 15px;
+    user-select: none;
   }
 `;
 
@@ -294,6 +332,7 @@ export const SubmitButton = styled.button`
   padding: 0.6rem 1rem;
   transition: opacity 0.1s;
   white-space: nowrap;
+  grid-column: 1 / -1;
 
   &:hover {
     opacity: 0.8;
@@ -304,11 +343,11 @@ export const SubmitButton = styled.button`
 
 export const InsightsCard = styled.div`
   background: #fff;
-  border: 1px solid #e5e5e5;
   border-radius: 8px;
   padding: 1.25rem;
   display: grid;
   gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 `;
 
 export const InsightsGrid = styled.div`
@@ -361,14 +400,15 @@ export const BarTrack = styled.div`
 
 interface BarFillProps {
   pct: number;
+  color?: string;
 }
 
 export const BarFill = styled.div<BarFillProps>`
-  background: #dc2626;
+  background: ${({ color }) => color ?? '#64748b'};
   border-radius: 99px;
   height: 100%;
   width: ${({ pct }) => pct}%;
-  transition: width 0.3s;
+  transition: width 0.4s ease;
 `;
 
 export const CategoryPct = styled.span`
@@ -379,9 +419,18 @@ export const CategoryPct = styled.span`
   flex-shrink: 0;
 `;
 
+export const CategoryValue = styled.span`
+  font-size: 0.72rem;
+  color: #555;
+  width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+  white-space: nowrap;
+`;
+
 export const BigExpenseCard = styled.div`
-  background: #fafafa;
-  border: 1px solid #f0f0f0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 0.75rem 1rem;
 `;
@@ -405,6 +454,26 @@ export const BigExpenseDesc = styled.p`
 export const BigExpenseMeta = styled.p`
   font-size: 0.78rem;
   color: #dc2626;
+`;
+
+export const PaidProgressTrack = styled.div`
+  background: #e5e7eb;
+  border-radius: 99px;
+  height: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0 0.35rem;
+`;
+
+interface PaidProgressFillProps {
+  pct: number;
+}
+
+export const PaidProgressFill = styled.div<PaidProgressFillProps>`
+  background: #16a34a;
+  border-radius: 99px;
+  height: 100%;
+  width: ${({ pct }) => Math.min(pct, 100)}%;
+  transition: width 0.4s ease;
 `;
 
 /* ─── Accordion ───────────────────────────────────────────────── */
@@ -435,12 +504,15 @@ export const AccordionHeader = styled.button<{ open: boolean }>`
   }
 
   span:last-child {
-    font-size: 0.7rem;
-    color: #888;
-    transform: rotate(${({ open }) => (open ? '0deg' : '-90deg')});
-    transition: transform 0.2s;
     display: inline-block;
-    line-height: 1;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid #888;
+    border-bottom: 1.5px solid #888;
+    transform: rotate(${({ open }) => (open ? '45deg' : '-45deg')})
+      translateY(${({ open }) => (open ? '-2px' : '0px')});
+    transition: transform 0.2s;
+    flex-shrink: 0;
   }
 `;
 
@@ -496,7 +568,7 @@ export const Td = styled.td`
 `;
 
 export const TdMuted = styled(Td)`
-  color: #aaa;
+  color: #6b7280;
   font-size: 0.8rem;
 `;
 
@@ -515,10 +587,10 @@ export const Amount = styled.span<AmountProps>`
 `;
 
 export const FixedBadge = styled.span`
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
   border-radius: 99px;
-  color: #2563eb;
+  color: #92400e;
   font-size: 0.65rem;
   font-weight: 500;
   padding: 1px 6px;
@@ -643,11 +715,49 @@ export const SaveButton = styled.button`
   }
 `;
 
-export const PaidCheckbox = styled.input`
-  cursor: pointer;
+export const Checkbox = styled.input.attrs({ type: 'checkbox' })`
+  appearance: none;
+  -webkit-appearance: none;
   width: 15px;
   height: 15px;
-  accent-color: #16a34a;
+  min-width: 15px;
+  border: 1.5px solid #d0d0d0;
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  background: #fff;
+  transition: border-color 0.1s, background 0.1s;
+  flex-shrink: 0;
+
+  &:checked {
+    background: #111;
+    border-color: #111;
+  }
+
+  &:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(40deg);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+`;
+
+export const PaidCheckbox = styled(Checkbox)`
+  &:checked {
+    background: #16a34a;
+    border-color: #16a34a;
+  }
 `;
 
 export const EmptyState = styled.p`

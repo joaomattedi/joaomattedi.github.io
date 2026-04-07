@@ -11,7 +11,7 @@ export default createGlobalStyle`
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 16px;
     color: #111;
-    background: #fafafa;
+    background: #f7f7f6;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -19,7 +19,8 @@ export default createGlobalStyle`
     font-family: inherit;
   }
 
-  input, select {
+  input, select, textarea {
     font-family: inherit;
+    font-size: inherit;
   }
 `;

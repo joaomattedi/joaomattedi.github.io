@@ -163,7 +163,7 @@ export default function Finance() {
             <div style={{ marginBottom: '1rem' }}>
               <AccordionHeader open={fixedOpen} onClick={() => setFixedOpen((o) => !o)}>
                 <span>Fixas ({fixedExpenses.length})</span>
-                <span>▾</span>
+                <span />
               </AccordionHeader>
               {fixedOpen && (
                 <TransactionList
@@ -184,7 +184,7 @@ export default function Finance() {
             style={{ marginTop: fixedExpenses.length > 0 ? '0.25rem' : 0 }}
           >
             <span>Variáveis ({variableExpenses.length})</span>
-            <span>▾</span>
+            <span />
           </AccordionHeader>
           {variableOpen && (
             <TransactionList

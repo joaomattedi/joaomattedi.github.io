@@ -9,11 +9,12 @@ import {
   CategoryName,
   BarTrack,
   BarFill,
-  CategoryPct,
+  CategoryValue,
   BigExpenseCard,
   BigExpenseLabel,
-  BigExpenseDesc,
   BigExpenseMeta,
+  PaidProgressTrack,
+  PaidProgressFill,
 } from './styles';
 
 interface SpendingInsightsProps {
@@ -46,20 +47,22 @@ export default function SpendingInsights({ expenses, income, paidExpense }: Spen
   const biggest = [...expenses].sort((a, b) => b.amount - a.amount)[0];
   const biggestPctIncome = income > 0 ? (biggest.amount / income) * 100 : 0;
 
+  const barColors = ['#334155', '#475569', '#64748b', '#94a3b8', '#94a3b8', '#94a3b8'];
+
   return (
     <InsightsCard>
       <InsightsGrid>
         <InsightsSection>
           <InsightsSectionTitle>Gastos por categoria</InsightsSectionTitle>
-          {categories.map(([cat, amount]) => {
-            const pct = totalExpense > 0 ? (amount / totalExpense) * 100 : 0;
+          {categories.map(([cat, catAmount], index) => {
+            const pct = totalExpense > 0 ? (catAmount / totalExpense) * 100 : 0;
             return (
               <CategoryRow key={cat}>
                 <CategoryName title={cat}>{cat}</CategoryName>
                 <BarTrack>
-                  <BarFill pct={pct} />
+                  <BarFill pct={pct} color={barColors[index]} />
                 </BarTrack>
-                <CategoryPct>{Math.round(pct)}%</CategoryPct>
+                <CategoryValue>{fmt(catAmount)}</CategoryValue>
               </CategoryRow>
             );
           })}
@@ -69,7 +72,9 @@ export default function SpendingInsights({ expenses, income, paidExpense }: Spen
           <InsightsSectionTitle>Maior gasto</InsightsSectionTitle>
           <BigExpenseCard>
             <BigExpenseLabel>{biggest.category} · {biggest.date.split('-').reverse().join('/')}</BigExpenseLabel>
-            <BigExpenseDesc title={biggest.description}>{biggest.description}</BigExpenseDesc>
+            <BigExpenseMeta style={{ color: '#111', fontSize: '0.9rem', fontWeight: 500, margin: '0.1rem 0' }}>
+              {biggest.description}
+            </BigExpenseMeta>
             <BigExpenseMeta>
               {fmt(biggest.amount)}
               {income > 0 && ` · ${biggestPctIncome.toFixed(1)}% da receita`}
@@ -78,8 +83,13 @@ export default function SpendingInsights({ expenses, income, paidExpense }: Spen
 
           <InsightsSectionTitle style={{ marginTop: '1rem' }}>Contas pagas</InsightsSectionTitle>
           <BigExpenseCard>
-            <BigExpenseLabel>{fmt(paidExpense)} de {fmt(totalExpense)}</BigExpenseLabel>
-            <BigExpenseDesc>{paidPercent}%</BigExpenseDesc>
+            <BigExpenseLabel style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span>{fmt(paidExpense)} de {fmt(totalExpense)}</span>
+              <span style={{ fontWeight: 600, color: paidPercent >= 100 ? '#16a34a' : '#555' }}>{paidPercent}%</span>
+            </BigExpenseLabel>
+            <PaidProgressTrack>
+              <PaidProgressFill pct={paidPercent} />
+            </PaidProgressTrack>
             <BigExpenseMeta style={{ color: '#16a34a' }}>
               {totalExpense - paidExpense > 0 ? `${fmt(totalExpense - paidExpense)} restantes` : 'Tudo pago!'}
             </BigExpenseMeta>
