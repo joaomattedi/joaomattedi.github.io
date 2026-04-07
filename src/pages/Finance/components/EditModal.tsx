@@ -97,7 +97,7 @@ export default function EditModal({ transaction, onSave, onClose }: EditModalPro
         </Select>
 
         <Select value={account} onChange={(e) => setAccount(e.target.value)}>
-          <option value="">Conta / Cartão</option>
+          <option value="">Método de pagamento</option>
           {ACCOUNTS.map((a) => (
             <option key={a} value={a}>{a}</option>
           ))}

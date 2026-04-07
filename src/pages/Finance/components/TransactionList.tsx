@@ -53,7 +53,7 @@ export default function TransactionList({ type, transactions, onEdit, onDelete, 
             <Tr>
               <Th>Descrição</Th>
               <Th>Categoria</Th>
-              {type === 'expense' && <Th>Conta</Th>}
+              {type === 'expense' && <Th>Pagamento</Th>}
               <Th>Data</Th>
               <ThRight>Valor</ThRight>
               {type === 'expense' && <Th style={{ textAlign: 'center' }}>Pago</Th>}
