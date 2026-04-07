@@ -14,15 +14,15 @@ function fmt(value: number) {
 export default function Dashboard({ income, expense, balance }: DashboardProps) {
   return (
     <CardsRow>
-      <SummaryCard>
+      <SummaryCard variant="income">
         <CardLabel>Receitas</CardLabel>
         <CardValue variant="income">{fmt(income)}</CardValue>
       </SummaryCard>
-      <SummaryCard>
+      <SummaryCard variant="expense">
         <CardLabel>Despesas</CardLabel>
         <CardValue variant="expense">{fmt(expense)}</CardValue>
       </SummaryCard>
-      <SummaryCard>
+      <SummaryCard variant="balance">
         <CardLabel>Saldo</CardLabel>
         <CardValue variant="balance">{fmt(balance)}</CardValue>
       </SummaryCard>

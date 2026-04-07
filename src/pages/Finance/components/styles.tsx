@@ -128,17 +128,24 @@ export const CardsRow = styled.div`
   }
 `;
 
-export const SummaryCard = styled.div`
+interface SummaryCardProps {
+  variant?: 'income' | 'expense' | 'balance';
+}
+
+const cardAccentColors = { income: '#16a34a', expense: '#dc2626', balance: '#9ca3af' };
+
+export const SummaryCard = styled.div<SummaryCardProps>`
   background: #fff;
-  border: 1px solid #e5e5e5;
   border-radius: 8px;
-  padding: 1rem;
+  border-left: 3px solid ${({ variant }) => (variant ? cardAccentColors[variant] : '#e5e5e5')};
+  padding: 1rem 1rem 1rem 0.875rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 `;
 
 export const CardLabel = styled.p`
   font-size: 0.75rem;
   color: #888;
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.4rem;
 `;
 
 interface CardValueProps {
@@ -148,14 +155,15 @@ interface CardValueProps {
 const valueColors = { income: '#16a34a', expense: '#dc2626', balance: '#111' };
 
 export const CardValue = styled.p<CardValueProps>`
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: ${({ variant }) => (variant ? valueColors[variant] : '#111')};
+  line-height: 1.2;
 `;
 
 export const CardSubLabel = styled.p`
   font-size: 0.7rem;
-  color: #aaa;
+  color: #9ca3af;
   margin-top: 0.25rem;
 `;
 
@@ -335,11 +343,11 @@ export const SubmitButton = styled.button`
 
 export const InsightsCard = styled.div`
   background: #fff;
-  border: 1px solid #e5e5e5;
   border-radius: 8px;
   padding: 1.25rem;
   display: grid;
   gap: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
 `;
 
 export const InsightsGrid = styled.div`
@@ -392,14 +400,15 @@ export const BarTrack = styled.div`
 
 interface BarFillProps {
   pct: number;
+  color?: string;
 }
 
 export const BarFill = styled.div<BarFillProps>`
-  background: #dc2626;
+  background: ${({ color }) => color ?? '#64748b'};
   border-radius: 99px;
   height: 100%;
   width: ${({ pct }) => pct}%;
-  transition: width 0.3s;
+  transition: width 0.4s ease;
 `;
 
 export const CategoryPct = styled.span`
@@ -410,9 +419,18 @@ export const CategoryPct = styled.span`
   flex-shrink: 0;
 `;
 
+export const CategoryValue = styled.span`
+  font-size: 0.72rem;
+  color: #555;
+  width: 80px;
+  text-align: right;
+  flex-shrink: 0;
+  white-space: nowrap;
+`;
+
 export const BigExpenseCard = styled.div`
-  background: #fafafa;
-  border: 1px solid #f0f0f0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 6px;
   padding: 0.75rem 1rem;
 `;
@@ -436,6 +454,26 @@ export const BigExpenseDesc = styled.p`
 export const BigExpenseMeta = styled.p`
   font-size: 0.78rem;
   color: #dc2626;
+`;
+
+export const PaidProgressTrack = styled.div`
+  background: #e5e7eb;
+  border-radius: 99px;
+  height: 6px;
+  overflow: hidden;
+  margin: 0.5rem 0 0.35rem;
+`;
+
+interface PaidProgressFillProps {
+  pct: number;
+}
+
+export const PaidProgressFill = styled.div<PaidProgressFillProps>`
+  background: #16a34a;
+  border-radius: 99px;
+  height: 100%;
+  width: ${({ pct }) => Math.min(pct, 100)}%;
+  transition: width 0.4s ease;
 `;
 
 /* ─── Accordion ───────────────────────────────────────────────── */
@@ -530,7 +568,7 @@ export const Td = styled.td`
 `;
 
 export const TdMuted = styled(Td)`
-  color: #aaa;
+  color: #6b7280;
   font-size: 0.8rem;
 `;
 
@@ -549,10 +587,10 @@ export const Amount = styled.span<AmountProps>`
 `;
 
 export const FixedBadge = styled.span`
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
   border-radius: 99px;
-  color: #2563eb;
+  color: #92400e;
   font-size: 0.65rem;
   font-weight: 500;
   padding: 1px 6px;
