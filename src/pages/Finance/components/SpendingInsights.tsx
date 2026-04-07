@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Transaction } from '../types';
 import {
   InsightsCard,
   InsightsGrid,
   InsightsSection,
   InsightsSectionTitle,
+  InsightsSectionHeader,
+  InsightsDivider,
   CategoryRow,
   CategoryName,
+  PaymentMethodName,
   BarTrack,
   BarFill,
   CategoryValue,
@@ -15,6 +18,8 @@ import {
   BigExpenseMeta,
   PaidProgressTrack,
   PaidProgressFill,
+  ViewToggle,
+  ViewToggleBtn,
 } from './styles';
 
 interface SpendingInsightsProps {
@@ -28,6 +33,8 @@ function fmt(value: number) {
 }
 
 export default function SpendingInsights({ expenses, income, paidExpense }: SpendingInsightsProps) {
+  const [viewMode, setViewMode] = useState<'value' | 'pct'>('value');
+
   if (expenses.length === 0) return null;
 
   const totalExpense = expenses.reduce((acc, t) => acc + t.amount, 0);
@@ -41,7 +48,16 @@ export default function SpendingInsights({ expenses, income, paidExpense }: Spen
 
   const categories = Object.entries(byCategory)
     .sort(([, a], [, b]) => b - a)
-    .slice(0, 6); // top 6
+    .slice(0, 6);
+
+  // Group by payment method
+  const byAccount = expenses.reduce<Record<string, number>>((acc, t) => {
+    const key = t.account || 'Sem método';
+    acc[key] = (acc[key] ?? 0) + t.amount;
+    return acc;
+  }, {});
+
+  const accountEntries = Object.entries(byAccount).sort(([, a], [, b]) => b - a);
 
   // Biggest single expense
   const biggest = [...expenses].sort((a, b) => b.amount - a.amount)[0];
@@ -96,6 +112,32 @@ export default function SpendingInsights({ expenses, income, paidExpense }: Spen
           </BigExpenseCard>
         </InsightsSection>
       </InsightsGrid>
+
+      <InsightsDivider />
+
+      <InsightsSection>
+        <InsightsSectionHeader>
+          <InsightsSectionTitle>Gastos por meio de pagamento</InsightsSectionTitle>
+          <ViewToggle>
+            <ViewToggleBtn active={viewMode === 'value'} onClick={() => setViewMode('value')}>R$</ViewToggleBtn>
+            <ViewToggleBtn active={viewMode === 'pct'} onClick={() => setViewMode('pct')}>%</ViewToggleBtn>
+          </ViewToggle>
+        </InsightsSectionHeader>
+        {accountEntries.map(([method, amount]) => {
+          const pct = totalExpense > 0 ? (amount / totalExpense) * 100 : 0;
+          return (
+            <CategoryRow key={method}>
+              <PaymentMethodName title={method}>{method}</PaymentMethodName>
+              <BarTrack>
+                <BarFill pct={pct} color="#3b82f6" />
+              </BarTrack>
+              <CategoryValue>
+                {viewMode === 'value' ? fmt(amount) : `${Math.round(pct)}%`}
+              </CategoryValue>
+            </CategoryRow>
+          );
+        })}
+      </InsightsSection>
     </InsightsCard>
   );
 }
