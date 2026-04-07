@@ -428,6 +428,50 @@ export const CategoryValue = styled.span`
   white-space: nowrap;
 `;
 
+export const PaymentMethodName = styled(CategoryName)`
+  width: 110px;
+`;
+
+export const InsightsDivider = styled.div`
+  border-top: 1px solid #f0f0f0;
+`;
+
+export const InsightsSectionHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const ViewToggle = styled.div`
+  display: flex;
+  gap: 2px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  padding: 2px;
+`;
+
+interface ViewToggleBtnProps {
+  active: boolean;
+}
+
+export const ViewToggleBtn = styled.button<ViewToggleBtnProps>`
+  background: ${({ active }) => (active ? '#fff' : 'transparent')};
+  border: none;
+  border-radius: 4px;
+  color: ${({ active }) => (active ? '#111' : '#888')};
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: ${({ active }) => (active ? '600' : '400')};
+  padding: 0.2rem 0.5rem;
+  transition: all 0.15s;
+  box-shadow: ${({ active }) => (active ? '0 1px 2px rgba(0,0,0,0.1)' : 'none')};
+  white-space: nowrap;
+
+  &:hover {
+    color: #111;
+  }
+`;
+
 export const BigExpenseCard = styled.div`
   background: #f8fafc;
   border: 1px solid #e2e8f0;
