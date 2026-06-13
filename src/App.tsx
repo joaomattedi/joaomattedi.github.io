@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import GlobalStyle from './globalStyle';
 import AllRoutes from './routes/Routes';
 import Login from './pages/Login';
+import Layout from './components/Layout';
 import { useAuth } from './hooks/useAuth';
 
 function App() {
@@ -15,7 +16,9 @@ function App() {
   return (
     <BrowserRouter>
       <GlobalStyle />
-      <AllRoutes />
+      <Layout>
+        <AllRoutes />
+      </Layout>
     </BrowserRouter>
   );
 }
