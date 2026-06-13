@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import {
   AppShell,
   Sidebar,
+  ToggleButton,
+  ToggleIcon,
   SidebarName,
   NavItem,
+  NavLabel,
   SidebarFooter,
   LogoutButton,
   MainContent,
@@ -19,28 +22,34 @@ const NAV_ITEMS = [
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { logOut } = useAuth();
 
   return (
     <AppShell>
-      <Sidebar>
-        <SidebarName>Joao Mattedi</SidebarName>
+      <Sidebar collapsed={collapsed}>
+        <ToggleButton onClick={() => setCollapsed((c) => !c)}>
+          <ToggleIcon collapsed={collapsed}>←</ToggleIcon>
+        </ToggleButton>
+        <SidebarName collapsed={collapsed}>Joao Mattedi</SidebarName>
         {NAV_ITEMS.map((item) => (
           <NavItem
             key={item.path}
             active={location.pathname.startsWith(item.path)}
             onClick={() => navigate(item.path)}
           >
-            {item.label}
+            <NavLabel collapsed={collapsed}>{item.label}</NavLabel>
           </NavItem>
         ))}
         <SidebarFooter>
-          <LogoutButton onClick={logOut}>Sair</LogoutButton>
+          <LogoutButton collapsed={collapsed} onClick={logOut}>
+            Sair
+          </LogoutButton>
         </SidebarFooter>
       </Sidebar>
-      <MainContent>{children}</MainContent>
+      <MainContent collapsed={collapsed}>{children}</MainContent>
     </AppShell>
   );
 }
