@@ -32,10 +32,15 @@ const BtnCancel = styled.button`background:none;border:1px solid #e5e5e5;border-
 const BtnDelete = styled.button`background:none;border:1px solid #fecaca;border-radius:4px;color:#dc2626;cursor:pointer;font-size:0.875rem;padding:0.5rem 1rem;font-family:inherit;&:hover{background:#fef2f2}`;
 const BtnSave = styled.button`background:#111;border:none;border-radius:4px;color:#fff;cursor:pointer;font-size:0.875rem;font-weight:500;padding:0.5rem 1rem;font-family:inherit;flex:1;&:hover{opacity:0.8}@media(min-width:480px){flex:none}`;
 
-function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
 interface Props {
-  open: boolean; event?: CalendarEvent | null; initialDate?: string;
+  open: boolean;
+  event?: CalendarEvent | null;
+  initialDate?: string;
   onClose: () => void;
   onSave: (data: Omit<CalendarEvent, 'id' | 'googleEventId'>) => void;
   onDelete?: (id: string) => void;
@@ -47,11 +52,24 @@ export default function EventModal({ open, event, initialDate, onClose, onSave, 
   const [startTime, setStartTime] = useState('08:00');
   const [endTime, setEndTime] = useState('09:00');
   const [description, setDescription] = useState('');
-  const [color, setColor] = useState(EVENT_COLORS[0]);
+  const [color, setColor] = useState<string>(EVENT_COLORS[0]);
 
   useEffect(() => {
-    if (event) { setTitle(event.title); setDate(event.date); setStartTime(event.startTime || '08:00'); setEndTime(event.endTime || '09:00'); setDescription(event.description || ''); setColor(event.color); }
-    else { setTitle(''); setDate(initialDate || todayStr()); setStartTime('08:00'); setEndTime('09:00'); setDescription(''); setColor(EVENT_COLORS[0]); }
+    if (event) {
+      setTitle(event.title);
+      setDate(event.date);
+      setStartTime(event.startTime || '08:00');
+      setEndTime(event.endTime || '09:00');
+      setDescription(event.description || '');
+      setColor(event.color);
+    } else {
+      setTitle('');
+      setDate(initialDate || todayStr());
+      setStartTime('08:00');
+      setEndTime('09:00');
+      setDescription('');
+      setColor(EVENT_COLORS[0]);
+    }
   }, [event, initialDate, open]);
 
   function handleSave() {
@@ -64,14 +82,24 @@ export default function EventModal({ open, event, initialDate, onClose, onSave, 
     <Overlay open={open} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <Modal>
         <Handle />
-        <Header><Title>{event ? 'Editar evento' : 'Novo evento'}</Title><CloseBtn onClick={onClose}>×</CloseBtn></Header>
+        <Header>
+          <Title>{event ? 'Editar evento' : 'Novo evento'}</Title>
+          <CloseBtn onClick={onClose}>×</CloseBtn>
+        </Header>
         <Field><Label>Título</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex: Academia" /></Field>
         <Field><Label>Data</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
         <Row>
           <Field><Label>Início</Label><Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} /></Field>
           <Field><Label>Fim</Label><Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} /></Field>
         </Row>
-        <Field><Label>Cor</Label><ColorRow>{EVENT_COLORS.map((c) => <ColorDot key={c} color={c} selected={color === c} onClick={() => setColor(c)} />)}</ColorRow></Field>
+        <Field>
+          <Label>Cor</Label>
+          <ColorRow>
+            {EVENT_COLORS.map((c) => (
+              <ColorDot key={c} color={c} selected={color === c} onClick={() => setColor(c)} />
+            ))}
+          </ColorRow>
+        </Field>
         <Field><Label>Descrição</Label><TextArea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Opcional" /></Field>
         <Actions>
           {event && onDelete && <BtnDelete onClick={() => { onDelete(event.id); onClose(); }}>Excluir</BtnDelete>}
