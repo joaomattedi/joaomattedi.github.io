@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const Wrapper = styled.div`
@@ -75,7 +76,7 @@ export default function Login() {
 
   return (
     <Wrapper>
-      <Title>Finanças</Title>
+      <Title>João Mattedi</Title>
       <GoogleButton onClick={signIn}>
         <GoogleIcon />
         Entrar com Google
