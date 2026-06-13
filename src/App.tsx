@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Navigate } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import GlobalStyle from './globalStyle';
 import AllRoutes from './routes/Routes';
 import Layout from './components/Layout';

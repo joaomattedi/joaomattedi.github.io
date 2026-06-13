@@ -22,8 +22,8 @@ const PageSubtitle = styled.p`
 export default function Diet() {
   return (
     <PageWrapper>
-      <PageTitle>🥗 Dieta</PageTitle>
-      <PageSubtitle>Em breve — sua dieta aparecerá aqui.</PageSubtitle>
+      <PageTitle>Dieta</PageTitle>
+      <PageSubtitle>Em breve.</PageSubtitle>
     </PageWrapper>
   );
 }
