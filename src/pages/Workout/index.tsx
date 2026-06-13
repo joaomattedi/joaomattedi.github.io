@@ -22,8 +22,8 @@ const PageSubtitle = styled.p`
 export default function Workout() {
   return (
     <PageWrapper>
-      <PageTitle>🏋️ Treinos</PageTitle>
-      <PageSubtitle>Em breve — seus treinos aparecerão aqui.</PageSubtitle>
+      <PageTitle>Treinos</PageTitle>
+      <PageSubtitle>Em breve.</PageSubtitle>
     </PageWrapper>
   );
 }

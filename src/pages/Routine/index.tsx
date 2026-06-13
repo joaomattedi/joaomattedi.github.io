@@ -22,8 +22,8 @@ const PageSubtitle = styled.p`
 export default function Routine() {
   return (
     <PageWrapper>
-      <PageTitle>📅 Rotina</PageTitle>
-      <PageSubtitle>Em breve — sua rotina aparecerá aqui.</PageSubtitle>
+      <PageTitle>Rotina</PageTitle>
+      <PageSubtitle>Em breve.</PageSubtitle>
     </PageWrapper>
   );
 }

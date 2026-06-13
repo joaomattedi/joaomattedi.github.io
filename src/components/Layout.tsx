@@ -4,20 +4,18 @@ import { useAuth } from '../hooks/useAuth';
 import {
   AppShell,
   Sidebar,
-  SidebarBrand,
-  SidebarSection,
-  NavLink,
-  NavIcon,
+  SidebarName,
+  NavItem,
   SidebarFooter,
   LogoutButton,
   MainContent,
 } from './layoutStyles';
 
 const NAV_ITEMS = [
-  { label: 'Finanças', icon: '💰', path: '/finance' },
-  { label: 'Treinos', icon: '🏋️', path: '/workout' },
-  { label: 'Rotina', icon: '📅', path: '/routine' },
-  { label: 'Dieta', icon: '🥗', path: '/diet' },
+  { label: 'Financas', path: '/finance' },
+  { label: 'Treinos', path: '/workout' },
+  { label: 'Rotina', path: '/routine' },
+  { label: 'Dieta', path: '/diet' },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -28,20 +26,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <AppShell>
       <Sidebar>
-        <SidebarBrand>João Mattedi</SidebarBrand>
-        <SidebarSection>Menu</SidebarSection>
+        <SidebarName>Joao Mattedi</SidebarName>
         {NAV_ITEMS.map((item) => (
-          <NavLink
+          <NavItem
             key={item.path}
             active={location.pathname.startsWith(item.path)}
             onClick={() => navigate(item.path)}
           >
-            <NavIcon>{item.icon}</NavIcon>
             {item.label}
-          </NavLink>
+          </NavItem>
         ))}
         <SidebarFooter>
-          <LogoutButton onClick={logOut}>↩ Sair</LogoutButton>
+          <LogoutButton onClick={logOut}>Sair</LogoutButton>
         </SidebarFooter>
       </Sidebar>
       <MainContent>{children}</MainContent>
