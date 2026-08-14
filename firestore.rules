@@ -14,12 +14,5 @@ service cloud.firestore {
         && request.auth.uid == uid
         && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email.lower()));
     }
-
-    // TEMPORÁRIO — só pra migração via ?migrate=1. Apaga esse bloco depois de migrar.
-    match /{legacyCollection}/{docId} {
-      allow read, delete: if legacyCollection in ['meals', 'transactions', 'workouts']
-        && request.auth != null
-        && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email.lower()));
-    }
   }
 }
