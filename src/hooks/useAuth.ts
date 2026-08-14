@@ -12,8 +12,13 @@ export function useAuth() {
     const unsubscribe = onAuthStateChanged(auth, async (u) => {
       setUser(u);
       if (u?.email) {
-        const snap = await getDoc(doc(db, 'allowlist', u.email));
-        setIsAllowed(snap.exists());
+        try {
+          const snap = await getDoc(doc(db, 'allowlist', u.email.trim().toLowerCase()));
+          setIsAllowed(snap.exists());
+        } catch (err) {
+          console.error('allowlist check failed', err);
+          setIsAllowed(false);
+        }
       } else {
         setIsAllowed(false);
       }

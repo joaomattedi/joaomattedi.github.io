@@ -1,10 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Doc ID = email exato da conta Google. Existência do doc = acesso liberado.
+    // Doc ID = email (lowercase) da conta Google. Existência do doc = acesso liberado.
     // Escrita só via console (admin), nunca pelo client.
     match /allowlist/{email} {
-      allow get: if request.auth != null && request.auth.token.email == email;
+      allow get: if request.auth != null && request.auth.token.email.lower() == email;
       allow write: if false;
     }
 
@@ -12,7 +12,14 @@ service cloud.firestore {
     match /users/{uid}/{document=**} {
       allow read, write: if request.auth != null
         && request.auth.uid == uid
-        && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email));
+        && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email.lower()));
+    }
+
+    // TEMPORÁRIO — só pra migração via ?migrate=1. Apaga esse bloco depois de migrar.
+    match /{legacyCollection}/{docId} {
+      allow read, delete: if legacyCollection in ['meals', 'transactions', 'workouts']
+        && request.auth != null
+        && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email.lower()));
     }
   }
 }
