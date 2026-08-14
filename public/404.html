@@ -5,9 +5,10 @@
     <script>
       // GitHub Pages SPA redirect trick
       // Encodes the path into the query string so index.html can read it
-      var path = window.location.pathname;
+      var loc = window.location;
+      var path = loc.pathname + loc.search + loc.hash;
       window.location.replace(
-        window.location.origin + '/?p=' + encodeURIComponent(path)
+        loc.origin + '/?p=' + encodeURIComponent(path)
       );
     </script>
   </head>
