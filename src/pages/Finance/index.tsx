@@ -63,8 +63,8 @@ export default function Finance() {
   const [fixedOpen, setFixedOpen] = useState(true);
   const [variableOpen, setVariableOpen] = useState(true);
 
-  const { logOut } = useAuth();
-  const { loading, addTransaction, updateTransaction, deleteTransaction, togglePaid, getByMonth, getTotals, seedFixedExpenses } = useFinance();
+  const { user, logOut } = useAuth();
+  const { loading, addTransaction, updateTransaction, deleteTransaction, togglePaid, getByMonth, getTotals, seedFixedExpenses } = useFinance(user?.uid ?? '');
 
   const monthTransactions = getByMonth(year, month);
   const sorted = sortTransactions(monthTransactions, sortField, sortDir);

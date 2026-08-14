@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useAuth } from '../../hooks/useAuth';
 import { useWorkout } from './hooks/useWorkout';
 import WorkoutCard from './components/WorkoutCard';
 
@@ -52,7 +53,8 @@ const SubmitBtn = styled.button`
 `;
 
 export default function Workout() {
-  const { workouts, loading, addWorkout, deleteWorkout, addExercise, deleteExercise } = useWorkout();
+  const { user } = useAuth();
+  const { workouts, loading, addWorkout, deleteWorkout, addExercise, deleteExercise } = useWorkout(user?.uid ?? '');
   const [name, setName] = useState('');
   const [muscleGroup, setMuscleGroup] = useState('');
 

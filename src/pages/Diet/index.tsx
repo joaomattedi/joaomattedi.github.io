@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useAuth } from '../../hooks/useAuth';
 import { useDiet } from './hooks/useDiet';
 import MealCard from './components/MealCard';
 import MacrosSummary from './components/MacrosSummary';
@@ -52,7 +53,8 @@ const SubmitBtn = styled.button`
 `;
 
 export default function Diet() {
-  const { meals, loading, addMeal, deleteMeal, addFood, deleteFood } = useDiet();
+  const { user } = useAuth();
+  const { meals, loading, addMeal, deleteMeal, addFood, deleteFood } = useDiet(user?.uid ?? '');
   const [displayUnit, setDisplayUnit] = useState<Unit>('g');
   const [mealName, setMealName] = useState('');
 

@@ -1,22 +1,26 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, signInWithPopup, signOut, User } from 'firebase/auth';
-import { auth, googleProvider } from '../lib/firebase';
-
-const ALLOWED_EMAIL = 'joaommattedi@gmail.com';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, googleProvider, db } from '../lib/firebase';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
+  const [isAllowed, setIsAllowed] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
+    const unsubscribe = onAuthStateChanged(auth, async (u) => {
       setUser(u);
+      if (u?.email) {
+        const snap = await getDoc(doc(db, 'allowlist', u.email));
+        setIsAllowed(snap.exists());
+      } else {
+        setIsAllowed(false);
+      }
       setLoading(false);
     });
     return unsubscribe;
   }, []);
-
-  const isAllowed = user?.email === ALLOWED_EMAIL;
 
   async function signIn() {
     await signInWithPopup(auth, googleProvider);

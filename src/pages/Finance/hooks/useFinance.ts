@@ -12,37 +12,38 @@ import {
 import { db } from '../../../lib/firebase';
 import { Transaction } from '../types';
 
-const COLLECTION = 'transactions';
-
-export function useFinance() {
+export function useFinance(uid: string) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const collectionRef = useCallback(() => collection(db, 'users', uid, 'transactions'), [uid]);
+
   useEffect(() => {
-    const q = query(collection(db, COLLECTION), orderBy('date', 'desc'));
+    if (!uid) return;
+    const q = query(collectionRef(), orderBy('date', 'desc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const docs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Transaction));
       setTransactions(docs);
       setLoading(false);
     });
     return unsubscribe;
-  }, []);
+  }, [uid, collectionRef]);
 
   const addTransaction = useCallback(async (transaction: Omit<Transaction, 'id'>) => {
-    await addDoc(collection(db, COLLECTION), { ...transaction, createdAt: Date.now() });
-  }, []);
+    await addDoc(collectionRef(), { ...transaction, createdAt: Date.now() });
+  }, [collectionRef]);
 
   const deleteTransaction = useCallback(async (id: string) => {
-    await deleteDoc(doc(db, COLLECTION, id));
-  }, []);
+    await deleteDoc(doc(db, 'users', uid, 'transactions', id));
+  }, [uid]);
 
   const togglePaid = useCallback(async (id: string, isPaid: boolean) => {
-    await updateDoc(doc(db, COLLECTION, id), { isPaid });
-  }, []);
+    await updateDoc(doc(db, 'users', uid, 'transactions', id), { isPaid });
+  }, [uid]);
 
   const updateTransaction = useCallback(async (id: string, data: Omit<Transaction, 'id'>) => {
-    await updateDoc(doc(db, COLLECTION, id), { ...data });
-  }, []);
+    await updateDoc(doc(db, 'users', uid, 'transactions', id), { ...data });
+  }, [uid]);
 
   const getByMonth = useCallback(
     (year: number, month: number) =>
@@ -88,7 +89,7 @@ export function useFinance() {
         if (!alreadyExists) {
           const day = fixed.date.split('-')[2];
           const newDate = `${year}-${String(month).padStart(2, '0')}-${day}`;
-          await addDoc(collection(db, COLLECTION), {
+          await addDoc(collectionRef(), {
             type: fixed.type,
             amount: fixed.amount,
             description: fixed.description,
@@ -99,7 +100,7 @@ export function useFinance() {
         }
       }
     },
-    [transactions],
+    [transactions, collectionRef],
   );
 
   return { transactions, loading, addTransaction, updateTransaction, deleteTransaction, togglePaid, getByMonth, getTotals, seedFixedExpenses };

@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Doc ID = email exato da conta Google. Existência do doc = acesso liberado.
+    // Escrita só via console (admin), nunca pelo client.
+    match /allowlist/{email} {
+      allow get: if request.auth != null && request.auth.token.email == email;
+      allow write: if false;
+    }
+
+    // Cada usuário só enxerga a própria subárvore, e só se estiver na allowlist.
+    match /users/{uid}/{document=**} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == uid
+        && exists(/databases/$(database)/documents/allowlist/$(request.auth.token.email));
+    }
+  }
+}
